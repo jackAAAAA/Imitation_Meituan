@@ -11,16 +11,17 @@ import color from '../../widget/color'
 import NavigationItem from '../../widget/NavigationItem'
 import * as api from '../../api'
 import HomeMenuView from './HomeMenuView'
+import HomeGridItem from './HomeGridItem'
 
-type Pros = {
+type Props = {
 
 }
 
 type State = {
-
+    discounts: Array<Object>,
 }
 
-class HomeScene extends PureComponent<Pros, State> {
+class HomeScene extends PureComponent<Props, State> {
 
     static navigationOptions = () => ({
         headerStyle: { backgroundColor: color.primary },
@@ -50,6 +51,30 @@ class HomeScene extends PureComponent<Pros, State> {
 
     })
 
+    constructor(props: Object) {
+        super(props)
+
+        this.state = {
+            discounts: [],
+        }
+
+    }
+
+    componentDidMount() {
+        this.requestData()
+    }
+
+    requestData = async () => {
+        try {
+            let response = await fetch(api.discount)
+            let json = await response.json()
+            this.setState({ discounts: json.data })
+            alert('test ' + JSON.stringify(json.data))
+        } catch (error) {
+            alert('error ' + error)
+        }
+    }
+
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -59,6 +84,15 @@ class HomeScene extends PureComponent<Pros, State> {
                         alert('test ' + index)
                     }}
                 />
+
+                <View style={{ height: 14, backgroundColor: color.paper }} />
+
+                <View style={styles.gridcontainer}>
+                    <HomeGridItem />
+                    <HomeGridItem />
+                    <HomeGridItem />
+                    <HomeGridItem />
+                </View>
             </View>
         )
     }
@@ -79,6 +113,13 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         margin: 5,
+    },
+    gridcontainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderLeftWidth: StyleSheet.hairlineWidth,
+        borderColor: color.border,
     }
 })
 
