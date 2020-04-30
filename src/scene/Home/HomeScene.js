@@ -6,12 +6,15 @@
 */
 
 import React, { PureComponent } from 'react'
-import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions } from 'react-native'
+import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions, FlatList } from 'react-native'
 import color from '../../widget/color'
 import NavigationItem from '../../widget/NavigationItem'
 import * as api from '../../api'
 import HomeMenuView from './HomeMenuView'
-import HomeGridItem from './HomeGridItem'
+import HomeGridView from './HomeGridView'
+import SpacingView from '../../widget/SpacingView'
+import { Heading3 } from '../../widget/Text'
+import GroupPurchaseCell from '../../scene/GroupPurchaseCell/GroupPurchaseCell'
 
 type Props = {
 
@@ -19,6 +22,8 @@ type Props = {
 
 type State = {
     discounts: Array<Object>,
+    dataList: Array<Object>,
+    // refreshing: boolean,
 }
 
 class HomeScene extends PureComponent<Props, State> {
@@ -56,6 +61,7 @@ class HomeScene extends PureComponent<Props, State> {
 
         this.state = {
             discounts: [],
+            dataList: [],
         }
 
     }
@@ -64,35 +70,98 @@ class HomeScene extends PureComponent<Props, State> {
         this.requestData()
     }
 
-    requestData = async () => {
+    requestData = () => {
+        this.requestDiscount()
+        this.requestRecommend()
+        // try {
+        //     let response = await fetch(api.discount)
+        //     let json = await response.json()
+        //     this.setState({ discounts: json.data })
+        //     alert('test ' + JSON.stringify(json.data))
+        // } catch (error) {
+        //     alert('error ' + error)
+        // }
+    }
+
+    requestRecommend = async () => {
         try {
-            let response = await fetch(api.discount)
-            let json = await response.json()
+            let dataList = api.recommend.data.map(
+                (info) => {
+                    return {
+                        id: info.id,
+                        imageUrl: info.squareimgurl,
+                        title: info.mname,
+                        subtitle: `[${info.range}]${info.title}`,
+                        price: info.price
+                    }
+                }
+            )
+
+            this.setState({
+                dataList: dataList,
+                // refreshing: false,
+            })
+        } catch (error) {
+            //   this.setState({ refreshing: false })
+            alert('error ' + error)
+        }
+    }
+
+
+    requestDiscount = async () => {
+        try {
+
+            let json = api.discount
             this.setState({ discounts: json.data })
-            alert('test ' + JSON.stringify(json.data))
+            // alert('test ' + JSON.stringify(json.data))
         } catch (error) {
             alert('error ' + error)
         }
     }
 
-    render() {
+    onGridSelected = (index) => {
+        let discount = this.state.discounts[index]
+        // alert('discount ' + JSON.stringify(discount))
+        if (discount.type == 1) {
+            let location = discount.tplurl.indexOf('http')
+            let url = discount.tplurl.slice(location)
+            this.props.navigation.navigate('WebScene', { url: url })
+        }
+    }
+
+    renderHeader = () => {
         return (
-            <View style={{ flex: 1 }}>
+            <View>
                 <HomeMenuView
                     menuInfos={api.menuInfos}
                     onMenuSelected={(index) => {
                         alert('test ' + index)
                     }}
                 />
-
-                <View style={{ height: 14, backgroundColor: color.paper }} />
-
-                <View style={styles.gridcontainer}>
-                    <HomeGridItem />
-                    <HomeGridItem />
-                    <HomeGridItem />
-                    <HomeGridItem />
+                <SpacingView />
+                <HomeGridView infos={this.state.discounts} onGridSelected={this.onGridSelected} />
+                <SpacingView />
+                <View style={styles.recommendHeader}>
+                    <Heading3>猜你喜欢</Heading3>
                 </View>
+            </View>
+        )
+    }
+
+    renderItem = (rowData) => (
+        <GroupPurchaseCell />
+    )
+
+    render() {
+        return (
+            <View style={{ flex: 1 }}>
+                <FlatList
+                    ListHeaderComponent={() => this.renderHeader()}
+                    data={this.state.dataList}
+                    renderItem={this.renderItem}
+                    keyExtractor={(item, index) => item.title}
+                // onRefresh={this.requestData}
+                />
             </View>
         )
     }
@@ -114,13 +183,14 @@ const styles = StyleSheet.create({
         height: 20,
         margin: 5,
     },
-    gridcontainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderLeftWidth: StyleSheet.hairlineWidth,
+    recommendHeader: {
+        height: 35,
+        borderWidth: StyleSheet.hairlineWidth,
         borderColor: color.border,
-    }
+        paddingVertical: 8,
+        paddingLeft: 20,
+        backgroundColor: 'white',
+    },
 })
 
 export default HomeScene

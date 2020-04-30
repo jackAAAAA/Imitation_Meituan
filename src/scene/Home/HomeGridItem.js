@@ -9,9 +9,11 @@ import React, { PureComponent } from 'react'
 import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native'
 import screen from '../../common/screen'
 import color from '../../widget/color'
+import { Heading2, Heading3 } from '../../widget/Text'
 
 type Props = {
-
+    info: Object,
+    onPress: Function,
 }
 
 type State = {
@@ -21,13 +23,20 @@ type State = {
 class HomeGridItem extends PureComponent<Props, State> {
 
     render() {
+
+        let { info } = this.props
+        let title = info.maintitle
+        let color = info.typeface_color
+        let subtitle = info.deputytitle
+        let imageUrl = info.imageurl.replace('w.h', '120.0')
+
         return (
-            <TouchableOpacity style={styles.container}>
+            <TouchableOpacity style={styles.container} onPress={this.props.onPress}>
                 <View>
-                    <Text style={{ fontSize: 15, color: 'red', marginBottom: 10 }}>吃吃喝喝</Text>
-                    <Text style={{ fontSize: 14, color: '#333333' }}>年底聚会</Text>
+                    <Heading2 style={{ color: color, marginBottom: 10 }}>{title}</Heading2>
+                    <Heading3 >{subtitle}</Heading3>
                 </View>
-                <Image style={styles.icon} />
+                <Image style={styles.icon} source={{ uri: imageUrl }} />
             </TouchableOpacity>
         )
     }
@@ -49,7 +58,7 @@ const styles = StyleSheet.create({
     icon: {
         width: screen.width / 5,
         height: screen.width / 5,
-        backgroundColor: 'blue',
+        // backgroundColor: 'blue',
         marginLeft: 10,
     },
 
