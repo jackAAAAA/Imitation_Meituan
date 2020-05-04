@@ -8,7 +8,7 @@
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, Image, Text } from 'react-native'
 
-type Pros = {
+type Props = {
 
 }
 
@@ -16,7 +16,7 @@ type State = {
 
 }
 
-class OrderScene extends PureComponent<Pros, State> {
+class OrderScene extends PureComponent<Props, State> {
 
     render() {
         return (

@@ -17,6 +17,7 @@ import NearbyScene from './scene/Nearby/NearbyScene'
 import OrderScene from './scene/Order/OrderScene'
 import MineScene from './scene/Mine/MineScene'
 import WebScene from './scene/web/WebScene'
+import GroupPurchaseScene from './scene/GroupPurchaseCell/GroupPurchaseScene'
 
 class RootScene extends PureComponent<{}> {
 
@@ -107,6 +108,7 @@ Tab.navigationOptions = {
 const AppNavigator = createStackNavigator({
     Tab: { screen: Tab },
     WebScene: { screen: WebScene },
+    GroupPurchaseScene: { screen: GroupPurchaseScene },
 }, {
     defaultNavigationOptions: {
         headerBackTitle: null,

@@ -23,6 +23,7 @@ type Props = {
 type State = {
     discounts: Array<Object>,
     dataList: Array<Object>,
+    refreshing: Boolean,
     // refreshing: boolean,
 }
 
@@ -56,12 +57,13 @@ class HomeScene extends PureComponent<Props, State> {
 
     })
 
-    constructor(props: Object) {
+    constructor(props: Props) {
         super(props)
 
         this.state = {
             discounts: [],
             dataList: [],
+            refreshing: false,
         }
 
     }
@@ -71,6 +73,7 @@ class HomeScene extends PureComponent<Props, State> {
     }
 
     requestData = () => {
+        this.setState({ refreshing: true })
         this.requestDiscount()
         this.requestRecommend()
         // try {
@@ -99,10 +102,10 @@ class HomeScene extends PureComponent<Props, State> {
 
             this.setState({
                 dataList: dataList,
-                // refreshing: false,
+                refreshing: false,
             })
         } catch (error) {
-            //   this.setState({ refreshing: false })
+            this.setState({ refreshing: false })
             alert('error ' + error)
         }
     }
@@ -148,8 +151,16 @@ class HomeScene extends PureComponent<Props, State> {
         )
     }
 
-    renderItem = (rowData) => (
-        <GroupPurchaseCell />
+    onCellSelected = (info: Object) => {
+        // alert('test ' + JSON.stringify(info))
+        this.props.navigation.navigate('GroupPurchaseScene', {info: info})
+    }
+
+    renderItem = (info: Object) => (
+        <GroupPurchaseCell
+            onPress={this.onCellSelected}
+            info={info.item}
+        />
     )
 
     render() {
@@ -160,7 +171,12 @@ class HomeScene extends PureComponent<Props, State> {
                     data={this.state.dataList}
                     renderItem={this.renderItem}
                     keyExtractor={(item, index) => item.title}
-                // onRefresh={this.requestData}
+                    // onRefresh={this.requestData}
+                    onRefresh={
+                        this.requestData
+                    }
+                    refreshing={this.state.refreshing}
+
                 />
             </View>
         )

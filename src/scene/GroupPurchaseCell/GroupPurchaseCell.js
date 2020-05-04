@@ -14,7 +14,7 @@ import color from '../../widget/color'
 
 type Props = {
     info: Object,
-
+    onPress: Function,
 }
 
 type State = {
@@ -27,7 +27,9 @@ class GroupPurchaseCell extends PureComponent<Props, State> {
         let { info } = this.props
         let imageUrl = info.imageUrl.replace('w.h', '160.0')
         return (
-            <TouchableOpacity style={styles.container}>
+            <TouchableOpacity style={styles.container} onPress={() => {
+                this.props.onPress(info)
+            }}>
                 <Image style={styles.icon} source={{ uri: imageUrl }} />
                 <View style={styles.rightContainer}>
                     <Heading2>{info.title}</Heading2>

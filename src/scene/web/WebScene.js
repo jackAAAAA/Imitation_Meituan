@@ -20,12 +20,14 @@ type State = {
 class WebScene extends PureComponent<Props, State> {
 
     static nagationOptions = ({ navigation }: any) => ({
+        headerStyle: { backgroundColor: 'white' },
         title: navigation.state.params.title,
     })
 
-    constructor(props: Object) {
+    constructor(props: Props) {
         super(props)
         this.state = {
+            source: {}
             // source: { uri: this.props.navigation.state.params.url }
         }
 
@@ -64,9 +66,11 @@ class WebScene extends PureComponent<Props, State> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#2c3e50',
     },
     webview: {
         flex: 1,
+        backgroundColor: 'white',
     }
 
 })

@@ -1,5 +1,7 @@
 package com.imitation_meituan;
 
+import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
+
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
@@ -27,9 +29,16 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
+          packages.add(new RNCViewPagerPackage());
           return packages;
+
+          // return Arrays.<ReactPackage>asList(
+          //   new MainReactPackage(),
+          //   new RNCViewPagerPackage()
+          // );
+          
         }
+
 
         @Override
         protected String getJSMainModuleName() {
