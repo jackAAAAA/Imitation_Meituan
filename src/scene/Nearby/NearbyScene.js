@@ -11,6 +11,7 @@ import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-vi
 import { Heading3, Paragraph, } from '../../widget/Text'
 import color from '../../widget/color'
 import screen from '../../common/screen'
+import NearbyListScene from './NearbyListScene'
 
 
 type Pros = {
@@ -49,11 +50,30 @@ class NearbyScene extends PureComponent<Pros, State> {
 
     render() {
         let titles = ['享美食', '住酒店', '爱玩乐', '全部',]
+        let types = [
+            ['热门', '面包甜点', '小吃快餐', '川菜', '日本料理', '韩国料理', '台湾菜', '东北菜'],
+            ['热门', '商务出行', '公寓民宿', '情侣专享', '高星特惠'],
+            ['热门', 'KTV', '足疗按摩', '洗浴汗蒸', '电影院', '美发', '美甲'],
+            [],
+        ]
         return (
 
-            <ScrollableTabView>
+            <ScrollableTabView
+                style={styles.container}
+                tabBarBackgroundColor='white'
+                tabBarActiveTextColor='#fe566d'
+                tabBarInactiveTextColor='#555555'
+                tabBarTextStyle={styles.tabBarText}
+                tabBarUnderlineStyle={styles.tabBarUnderline}
+
+            >
                 {titles.map((title, i) => (
-                    <Text tabLabel={title}>{title}</Text>
+                    <NearbyListScene
+                        tabLabel={title}
+                        key={i}
+                        types={types[i]}
+                        navigation={this.props.navigation}
+                    />
                 ))}
             </ScrollableTabView>
             // <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -66,6 +86,18 @@ class NearbyScene extends PureComponent<Pros, State> {
 }
 
 const styles = StyleSheet.create({
+
+    container: {
+        flex: 1,
+        backgroundColor: color.paper,
+    },
+    tabBarText: {
+        fontSize: 14,
+        marginTop: 13,
+    },
+    tabBarUnderline: {
+        backgroundColor: '#fe566d'
+    },
     searchBar: {
         width: screen.width * 0.65,
         height: 30,
